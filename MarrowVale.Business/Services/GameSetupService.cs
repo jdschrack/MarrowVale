@@ -12,15 +12,17 @@ namespace MarrowVale.Business.Services
         private readonly IDrawingRepository _drawingRepository;
         private readonly IDrawingService _drawingService;
         private readonly IGameRepository _gameRepository;
+        private readonly ILocationRepository _locationRepository;
 
         public GameSetupService(ICharacterService characterService, IDrawingRepository drawingRepository, IPrintService printService,
-            IDrawingService drawingService, IGameRepository gameRepository)
+            IDrawingService drawingService, IGameRepository gameRepository, ILocationRepository locationRepository)
         {
             _characterService = characterService;
             _printService = printService;
             _drawingRepository = drawingRepository;
             _drawingService = drawingService;
             _gameRepository = gameRepository;
+            _locationRepository = locationRepository;
         }
 
         public Player Setup()
@@ -45,6 +47,7 @@ namespace MarrowVale.Business.Services
             {
                 _printService.Print("You must choose to start a New Game or Continue a saved game. Type your choice.");
                 Thread.Sleep(4000);
+                _printService.ClearConsole();
                 return Setup();
             }
         }
@@ -52,7 +55,8 @@ namespace MarrowVale.Business.Services
         private Player newGame()
         {
             var player = _characterService.NewCharacter();
-            var game = new Game();
+            var startingLocation = _locationRepository.GetLocation("Starting Village");
+            var game = new Game(startingLocation);
             
             _gameRepository.SaveGame(game, null, player.GameSaveName);
 

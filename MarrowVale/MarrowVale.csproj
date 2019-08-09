@@ -19,6 +19,7 @@
     <ProjectReference Include="..\MarrowVale.Business.Entities\MarrowVale.Business.Entities.csproj" />
     <ProjectReference Include="..\MarrowVale.Business\MarrowVale.Business.csproj" />
     <ProjectReference Include="..\MarrowVale.Common\MarrowVale.Common.csproj" />
+    <ProjectReference Include="..\MarrowVale.Data.Seeder\MarrowVale.Data.Seeder.csproj" />
     <ProjectReference Include="..\MarrowVale.Data\MarrowVale.Data.csproj" />
   </ItemGroup>
 

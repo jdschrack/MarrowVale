@@ -80,11 +80,7 @@ namespace MarrowVale.Business.Services
 
             var name = _globalItemsProvider.UpperFirstChar(_printService.ReadInput());
 
-            var player = _playerRepository.GetPlayer(name);
-
-            player.LastSaveDateTime = DateTime.Now;
-
-            _playerRepository.SavePlayers();
+            var player = _playerRepository.GetPlayer(name);         
 
             if (player == null)
             {
@@ -94,6 +90,10 @@ namespace MarrowVale.Business.Services
             }
             else
             {
+                player.LastSaveDateTime = DateTime.Now;
+
+                _playerRepository.SavePlayers();
+
                 return player;
             }
         }

@@ -26,8 +26,16 @@ namespace MarrowVale.Data.Repositories
         public Game LoadGame(string fileName)
         {
             var filePath = generateFilePath(fileName);
-            var gameFile = File.ReadAllText(filePath);
-            return JsonConvert.DeserializeObject<Game>(gameFile, Settings);
+
+            var fileExists = File.Exists(filePath);
+
+            if (fileExists)
+            {
+                var gameFile = File.ReadAllText(filePath);
+                return JsonConvert.DeserializeObject<Game>(gameFile, Settings);
+            }
+
+            return null;
         }
 
         public void SaveGame(Game game, string oldFileName, string newFileName)
@@ -63,7 +71,7 @@ namespace MarrowVale.Data.Repositories
 
         private string generateFilePath(string fileName)
         {
-            return $"{Environment.CurrentDirectory}\\Game Tools\\DataFiles\\{fileName}.json";
+            return $"{Environment.CurrentDirectory}\\Game Tools\\DataFiles\\SavedGames\\{fileName}.json";
         }
     }
 }
