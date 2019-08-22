@@ -1,5 +1,6 @@
 ﻿using MarrowVale.Business.Contracts;
 using MarrowVale.Business.Entities.Entities;
+using MarrowVale.Business.Entities.Enums;
 using MarrowVale.Common.Contracts;
 using MarrowVale.Data.Contracts;
 using Microsoft.Extensions.Logging;
@@ -19,6 +20,8 @@ namespace MarrowVale.Business.Services
         private readonly IGameRepository _gameRepository;
         private readonly IPlayerRepository _playerRepository;
         private readonly IInputProcessingService _inputProcessingService;
+        private readonly ITimeService _timeService;
+        private readonly ILocationRepository _locationRepository;
 
         private readonly ICombatService _combatService;
         
@@ -27,7 +30,8 @@ namespace MarrowVale.Business.Services
         
         public GameService(ILoggerFactory loggerFactory, IPrintService printService, IGlobalItemsProvider globalItemsProvider,
             IDrawingRepository drawingRepository, IDrawingService drawingService, IGameSetupService gameSetupService, IGameRepository gameRepository,
-            ICombatService combatService, IInputProcessingService inputProcessingService, IPlayerRepository playerRepository)
+            ICombatService combatService, IInputProcessingService inputProcessingService, IPlayerRepository playerRepository, ITimeService timeService,
+            ILocationRepository locationRepository)
         {
             _logger = loggerFactory.CreateLogger<GameService>();
             _printService = printService;
@@ -38,15 +42,35 @@ namespace MarrowVale.Business.Services
             _combatService = combatService;
             _playerRepository = playerRepository;
             _inputProcessingService = inputProcessingService;
+            _timeService = timeService;
+            _locationRepository = locationRepository;
             Player = gameSetupService.Setup();
-            Game = _gameRepository.LoadGame(Player.GameSaveName);
+
+            var currentGame = _gameRepository.LoadGame(Player.GameSaveName);
+
+            if(currentGame != null)
+            {
+                Game = currentGame;
+            }
+            else
+            {
+                var location = _locationRepository.GetLocation("Starting Village");
+                Game = new Game(location);
+            }           
         }
 
         public void Start()
         {
             var clockCancellationToken = startGameClock();
+            var currentLocation = string.Empty;
             while (true)
-            {
+            {             
+                if(currentLocation != Game.CurrentLocation.Name)
+                {
+                    currentLocation = Game.CurrentLocation.Name;
+                    enterLocation(Game.CurrentLocation);
+                }
+
                 var playerInput = _printService.ReadInput();
                 var command = _inputProcessingService.ProcessInput(playerInput)?.ToUpper();
 
@@ -87,6 +111,43 @@ namespace MarrowVale.Business.Services
             Player.UpdateSaveFields();
             _gameRepository.SaveGame(Game, oldSave, Player.GameSaveName);
             _playerRepository.SavePlayers();
+        }
+
+        private void enterLocation(Location location)
+        {
+            _printService.ClearConsole();
+            //startup of a location
+            if (location.PlayersVisited.Contains(Player.Name))
+            {
+                //player has visited this area. Read different description
+                //talk to different npcs
+                if (_timeService.GetGameTime(Game.GameTime) == TimeEnum.Evening || _timeService.GetGameTime(Game.GameTime) == TimeEnum.Night)
+                {
+                    //Player has visited and night time
+                    _printService.Print(location.GetLocationDescription(location.NightVisitedDescription));
+                }
+                else
+                {
+                    //player has visited and daytime
+                    
+                    _printService.Print(location.GetLocationDescription(location.DayVisitedDescription));
+                }
+            }
+            else
+            {
+                location.PlayersVisited.Add(Player.Name);
+
+                //player has not visited and night time
+                if(_timeService.GetGameTime(Game.GameTime) == TimeEnum.Evening || _timeService.GetGameTime(Game.GameTime) == TimeEnum.Night)
+                {                   
+                    _printService.Print(location.GetLocationDescription(location.NightDescription));
+                }
+                else
+                {
+                    //player has not visited and day time
+                    _printService.Print(location.GetLocationDescription(location.DayDescription));
+                }                
+            }
         }
     }
 }

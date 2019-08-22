@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MarrowVale.Business.Entities\MarrowVale.Business.Entities.csproj" />
+    <ProjectReference Include="..\MarrowVale.Data\MarrowVale.Data.csproj" />
   </ItemGroup>
 
 </Project>

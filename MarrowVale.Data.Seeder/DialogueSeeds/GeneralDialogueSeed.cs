@@ -11,7 +11,7 @@ namespace MarrowVale.Data.Seeder.DialogueSeeds
         {
             var listOfDialogues = new List<Dialogue>();
 
-            var greetingDialogue = new Dialogue("Greetings!",DialogueTypeEnum.Friendly,"Greeting",LanguageEnum.Common, new List<Dialogue>());
+            var greetingDialogue = new Dialogue("Greetings!",DialogueTypeEnum.Friendly,"Greeting",LanguageEnum.Common, new List<Dialogue>(), string.Empty);
 
             listOfDialogues.Add(greetingDialogue);
 

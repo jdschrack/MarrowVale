@@ -4,9 +4,14 @@ using MarrowVale.Common.Contracts;
 using MarrowVale.Common.Providers;
 using MarrowVale.Data.Contracts;
 using MarrowVale.Data.Repositories;
+using MarrowVale.Data.Seeder.DialogueSeeds;
+using MarrowVale.Data.Seeder.Items;
+using MarrowVale.Data.Seeder.LocationSeeds;
+using MarrowVale.Data.Seeder.Npcs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 
 namespace MarrowVale
 {
@@ -30,9 +35,11 @@ namespace MarrowVale
 
             //inputProcessor.ProcessInput("Hello");
 
-            //var soundRepo = serviceProvider.GetService<ISoundRepository>();
+            var soundRepo = serviceProvider.GetService<ISoundRepository>();
                      
-            //var audio = soundRepo.GetMusicLooping("Title.wav");
+            var audio = soundRepo.GetMusicLooping("Title.wav");
+
+            runSeeders(serviceProvider);
 
             var gameService = serviceProvider.GetService<IGameService>();
             gameService.Start();
@@ -100,7 +107,8 @@ namespace MarrowVale
                 .AddTransient<ISoundRepository, SoundRepository>()
                 .AddTransient<IClassRepository, ClassRepository>()
                 .AddSingleton<IGameRepository, GameRepository>()
-                .AddSingleton<IPlayerRepository, PlayerRepository>();
+                .AddSingleton<IPlayerRepository, PlayerRepository>()
+                .AddSingleton<ILocationRepository, LocationRepository>();
         }
 
         private static void ConfigureProviders(IServiceCollection services)
@@ -108,6 +116,24 @@ namespace MarrowVale
             //add providers to service collection
             services.AddTransient<IAppSettingsProvider, AppSettingsProvider>()
                 .AddSingleton<IGlobalItemsProvider, GlobalItemsProvider>();
+        }
+
+        private static void runSeeders(ServiceProvider serviceProvider)
+        {
+            var appSettingsProvider = serviceProvider.GetService<IAppSettingsProvider>();
+            var locationFile = File.Exists(Path.Combine(appSettingsProvider.DataFilesLocation, "LocationList.json"));
+
+            if (!locationFile)
+            {
+                var locations = GeneralLocationSeed.GetLocations();
+
+                var locationRepo = serviceProvider.GetService<ILocationRepository>();
+                locationRepo.SaveLocations(locations);
+            }
+           
+            //var dialogueSeeder = new GeneralDialogueSeed();
+            //var npcSeeder = new GeneralNpcSeed();
+            //var itemSeeder = new GeneralItemSeed();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace MarrowVale.Business.Entities.Entities
     public class Dialogue
     {
         [JsonConstructor]
-        public Dialogue(string Text, DialogueTypeEnum Type, string TriggerText, LanguageEnum Language, List<Dialogue> Dialogues, bool AlreadySpoken = false)
+        public Dialogue(string Text, DialogueTypeEnum Type, string TriggerText, LanguageEnum Language, List<Dialogue> Dialogues, string NpcName, bool AlreadySpoken = false)
         {
             this.Text = Text;
             this.Type = Type;
@@ -17,6 +17,7 @@ namespace MarrowVale.Business.Entities.Entities
             this.Language = Language;
             this.Dialogues = Dialogues ?? new List<Dialogue>();
             this.AlreadySpoken = AlreadySpoken;
+            this.NpcName = NpcName;
         }
             
         public string Text { get; }

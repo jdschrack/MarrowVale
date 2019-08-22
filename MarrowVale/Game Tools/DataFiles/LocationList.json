@@ -1,0 +1,25 @@
+{
+  "$type": "System.Collections.Generic.List`1[[MarrowVale.Business.Entities.Entities.Location, MarrowVale.Business.Entities]], System.Private.CoreLib",
+  "$values": [
+    {
+      "$type": "MarrowVale.Business.Entities.Entities.Location, MarrowVale.Business.Entities",
+      "Name": "Starting Village",
+      "DayDescription": "You step out of your small hut and look up at the sky.\r\nThrough the old gnarled trees, you spot a huge black storm cloud rolling in.\r\nEveryone you see is rushing to get inside to avoid the coming storm.\r\nYou have been in this village since as long as you can remember, and you have never seen anything like this before.\r\n\r\nYou see everyone run inside their houses except for the Crazy Old Man standing in front of his house to the west.\r\nHe is staring at the sky with a look of dread on his face.\r\n\r\nMother: You better hurry. A storm is coming.\r\nYou need to get going if you want to make it to High Village before it starts.\r\nYou don’t want to be soaking wet on your last day of training.\r\n",
+      "NightDescription": "this is a night description",
+      "DayVisitedDescription": "This is a day visited test description",
+      "NightVisitedDescription": "this is a night visited description",
+      "PlayersVisited": {
+        "$type": "System.Collections.Generic.List`1[[System.String, System.Private.CoreLib]], System.Private.CoreLib",
+        "$values": []
+      },
+      "Items": {
+        "$type": "System.Collections.Generic.List`1[[MarrowVale.Business.Entities.Entities.IItem, MarrowVale.Business.Entities]], System.Private.CoreLib",
+        "$values": []
+      },
+      "Npcs": {
+        "$type": "System.Collections.Generic.List`1[[MarrowVale.Business.Entities.Entities.Npc, MarrowVale.Business.Entities]], System.Private.CoreLib",
+        "$values": []
+      }
+    }
+  ]
+}

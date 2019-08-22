@@ -12,6 +12,12 @@ namespace MarrowVale.Business.Entities.Entities
             GameTime = new Time();
         }
 
+        public Game(Location currentLocation)
+        {
+            GameTime = new Time();
+            CurrentLocation = currentLocation;
+        }
+
         [JsonConstructor]
         private Game(Time GameTime, Location CurrentLocation)
         {

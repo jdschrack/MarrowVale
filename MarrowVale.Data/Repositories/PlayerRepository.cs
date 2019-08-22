@@ -32,7 +32,9 @@ namespace MarrowVale.Data.Repositories
                 TypeNameHandling = TypeNameHandling.All,
                 ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
             };
+
             Players = loadPlayers();
+
             if (Players == null)
             {
                 Players = new List<Player>();
